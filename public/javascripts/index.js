@@ -1,79 +1,57 @@
 
-function Hanger(pHangerName, pConstruction, pColor, pSturdiness, pPantClips) {
-    this.hangerName = pHangerName;
-    this.construction = pConstruction;
-    this.color = pColor;
-    this.sturdiness = pSturdiness;
-    this.pantClips = pPantClips;
+function storeTransaction(pStoreID, pSalesPersonID, pCdID, pPricePaid) {
+    this.StoreID = pStoreID;
+    this.SalesPersonID = pSalesPersonID;
+    this.CdID = pCdID;
+    this.PricePaid = pPricePaid;
   }
   
-var HangerList = [];  // our local copy of the cloud data
 
-//  modified by Khalid Mohamed
+
+var StoreIDList = [98053, 98007, 98077, 98055, 98011, 98046];             // array holding store IDs
+var CdIDList = [123456, 123654, 321456, 321654, 654123, 654321, 543216, 354126, 621453, 623451];      // array holding CD IDs
+
+
+
 document.addEventListener("DOMContentLoaded", function (event) {
 
+    // code to create and save a new transaction - modified by Ken Evans
     document.getElementById("submit").addEventListener("click", function () {
-        var tHangerName = document.getElementById("hangerName").value;
-        var tconstruction = document.getElementById("construction").value;
-        var tcolor = document.getElementById("color").value;
-        var tsturdiness = document.getElementById("sturdiness").value;
-        var tpantClips = document.getElementById("pantClips").value;
-        var oneHanger = new Hanger(tHangerName, tconstruction, tcolor, tsturdiness, tpantClips);
+        
+        buildTransaction();
+
+        var tStoreID = document.getElementById("storeID").value;
+        var tSalesPersonID = document.getElementById("salesPersonID").value;
+        var tCdID = document.getElementById("cdID").value;
+        var tPricePaid = document.getElementById("pricePaid").value;
+        
+        var oneTransaction = new storeTransaction(tStoreID, tSalesPersonID, tCdID, tPricePaid);
 
         $.ajax({
-            url: '/NewHanger' ,
+            url: '/NewTransaction' ,
             method: 'POST',
             dataType: 'json',
             contentType: 'application/json',
-            data: JSON.stringify(oneHanger),
+            data: JSON.stringify(oneTransaction),
             success: function (result) {
-                console.log("added new hanger")
+                console.log("added new transaction")
             }
 
         });
     });
 
+
+
+    // code to create a new transaction - modified by Ken Evans
     document.getElementById("get").addEventListener("click", function () {
-        updateList()
+        buildTransaction()
     });
   
 
 
-    // Code for deleting a single hanger - modified by Ken Evans
-    document.getElementById("delete").addEventListener("click", function () {
-        
-        var whichHanger = document.getElementById('deleteName').value;
-        var idToDelete = "";
-        for(i=0; i< HangerList.length; i++){
-            if(HangerList[i].hangerName === whichHanger) {
-                idToDelete = HangerList[i]._id;
-           }
-        }
-        
-        if(idToDelete != "")
-        {
-                     $.ajax({  
-                    url: 'DeleteHanger/'+ idToDelete,
-                    type: 'DELETE',  
-                    contentType: 'application/json',  
-                    success: function (response) {  
-                        console.log(response);  
-                    },  
-                    error: function () {  
-                        console.log('Error in Operation');  
-                    }  
-                });  
-        }
-        else {
-            console.log("NO matching Hanger Name! Unable to DELETE");
-        } 
-    });
-
-
-
     var idToFind = ""; // using the same value from the find operation for the modify
 
-    // Code to find one hanger to change - modified by Ken Evans
+    // Code to find one hanger to change
     document.getElementById("find").addEventListener("click", function () {
         var tName = document.getElementById("modName").value;
         idToFind = "";
@@ -97,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-    // Code for modifying a single hanger - modified by Ken Evans
+    // Code for modifying a single hanger
     document.getElementById("msubmit").addEventListener("click", function () {
         var tName = document.getElementById("mname").value;
         var tConstruction = document.getElementById("mconstruction").value;
@@ -112,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }
 
 
-        var oneHanger = new Hanger(tName, tConstruction, tColor, tSturdiness, tPantClips);
+        var oneHanger = new storeTransaction(tName, tConstruction, tColor, tSturdiness, tPantClips);
         
             $.ajax({
                 url: 'UpdateHanger/'+idToFind,
@@ -131,13 +109,29 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     
 
-    // get the server data into the local array
-    updateList();
+    // create a new transaction for page load - modified by Ken Evans
+    buildTransaction();
 
 });
 
 
-function updateList() {
+
+// Code for generating one transaction and updating the UI - modified by Ken Evans
+function buildTransaction() {
+
+    var tSalesPersonID = (Math.floor(Math.random() * 24) + 1);
+    var tStoreID = StoreIDList[Math.floor(((tSalesPersonID + 3) / 4) - 1)];
+    var tCdID = CdIDList[Math.floor(Math.random() * 10)];
+    var tPricePaid = (Math.floor(Math.random() * 11) + 5);
+
+    document.getElementById("storeID").value = tStoreID;
+    document.getElementById("salesPersonID").value = tSalesPersonID;
+    document.getElementById("cdID").value = tCdID;
+    document.getElementById("pricePaid").value = tPricePaid;
+   
+}
+
+/*    
 var ul = document.getElementById('listUl');
 ul.innerHTML = "";  // clears existing list so we don't duplicate old ones
 
@@ -159,7 +153,6 @@ $.get("/Hanger", function(data, status){  // AJAX get
         li.innerHTML=li.innerHTML + index + ": " + " Hanger Name: " + item.hangerName + " Construction: " + item.construction + " Color: " + item.color + " Sturdiness: " + item.sturdiness +  " Pant Clips? "+ item.pantClips;
     }
 });
-}
 
 function compare(a,b) {
     if (a.completed == false && b.completed== true) {
@@ -170,3 +163,4 @@ function compare(a,b) {
     }
     return 0;
 }
+*/
