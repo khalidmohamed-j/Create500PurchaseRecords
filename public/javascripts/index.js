@@ -4,6 +4,8 @@ function storeTransaction(pStoreID, pSalesPersonID, pCdID, pPricePaid) {
     this.SalesPersonID = pSalesPersonID;
     this.CdID = pCdID;
     this.PricePaid = pPricePaid;
+    this.HourPurch = 0;
+    this.DayPurch = 0;
   }
   
 
@@ -130,37 +132,3 @@ function buildTransaction() {
     document.getElementById("pricePaid").value = tPricePaid;
    
 }
-
-/*    
-var ul = document.getElementById('listUl');
-ul.innerHTML = "";  // clears existing list so we don't duplicate old ones
-
-//var ul = document.createElement('ul')
-
-//  modified by Khalid Mohamed
-$.get("/Hanger", function(data, status){  // AJAX get
-    HangerList = data;  // put the returned server json data into our local array
-
-    // sort array by one property
-    //HangerList.sort(compare);  // see compare method below
-    console.log(data);
-    //listDiv.appendChild(ul);
-    HangerList.forEach(ProcessOneToDo); // build one li for each item in array
-    function ProcessOneToDo(item, index) {
-        var li = document.createElement('li');
-        ul.appendChild(li);
-
-        li.innerHTML=li.innerHTML + index + ": " + " Hanger Name: " + item.hangerName + " Construction: " + item.construction + " Color: " + item.color + " Sturdiness: " + item.sturdiness +  " Pant Clips? "+ item.pantClips;
-    }
-});
-
-function compare(a,b) {
-    if (a.completed == false && b.completed== true) {
-        return -1;
-    }
-    if (a.completed == false && b.completed== true) {
-        return 1;
-    }
-    return 0;
-}
-*/

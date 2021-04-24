@@ -33,6 +33,23 @@ mongoose.connect(dbURI, options).then(
 
 
 
+/* Code to handle the pseudo time - created by Ken Evans */
+var tHourPurch = 0;
+var tDayPurch = 0;
+
+function pseudoTime() {
+  tHourPurch = tHourPurch + (Math.floor(Math.random() * 5) + 1);
+  if (tHourPurch > 23) {
+    tHourPurch = tHourPurch - 23;
+    tDayPurch = tDayPurch + 1;
+  }
+  if (tDayPurch > 364) {
+    tDayPurch = 0;
+  }
+}
+
+
+
 /* GET home page. */
 router.get('/', function(req, res) {
   res.sendFile('index.html');
@@ -43,17 +60,23 @@ router.get('/', function(req, res) {
 /* post a new Transaction and push to Mongo -  modified by Ken Evans */
 router.post('/NewTransaction', function(req, res) {
 
-    let oneNewTransaction = new Transactions(req.body);  // call constuctor in Transactions code that makes a new mongo Transaction object
-    console.log(req.body);
-    oneNewTransaction.save((err, transaction) => {
-      if (err) {
-        res.status(500).send(err);
-      }
-      else {
+  pseudoTime();
+  req.body.HourPurch = tHourPurch;
+  req.body.DayPurch = tDayPurch;
+
+  let oneNewTransaction = new Transactions(req.body);
+
+  console.log(req.body);
+  
+  oneNewTransaction.save((err, transaction) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+    else {
       console.log(transaction);
       res.status(201).json(transaction);
-      }
-    });
+    }
+  });
 });
 
 
