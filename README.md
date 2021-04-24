@@ -7,9 +7,9 @@ This project creates 500 random purchase records, each with:StoreID, SalesPerson
 1  CarlosFlores
 2  BonnieColeman
 3  MatthewYoung
-4  HeatherDiaz98007  
+4  HeatherDiaz
 
-Bellevue
+98007  Bellevue
 
 5  JohnSuzuki
 6  GregoryRussell
