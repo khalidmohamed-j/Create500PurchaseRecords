@@ -44,73 +44,36 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+
+    // code to Submit 500Transcations - modified by Khalid Mohamed
+    document.getElementById("fiveHdSubmit").addEventListener("click", function () {
+        
+        var counter = 0;
+
+        while(counter < 500){
+            var newTranscation = SubmitFiveHundredTransaction();
+            $.ajax({
+                url: '/FiveHundredTransactions' ,
+                method: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(newTranscation),
+                success: function (result) {
+                    console.log("added new transaction")
+                }
+            });
+            counter++;
+        }
+       
+        
+    });
+
+
     // code to create a new transaction - modified by Ken Evans
     document.getElementById("get").addEventListener("click", function () {
         buildTransaction()
     });
   
-
-
-    var idToFind = ""; // using the same value from the find operation for the modify
-
-    // Code to find one hanger to change
-    document.getElementById("find").addEventListener("click", function () {
-        var tName = document.getElementById("modName").value;
-        idToFind = "";
-        for(i=0; i< HangerList.length; i++){
-            if(HangerList[i].hangerName === tName) {
-                idToFind = HangerList[i]._id;
-           }
-        }
-        console.log(idToFind);
- 
-        $.get("/FindHanger/"+ idToFind, function(data, status){ 
-            console.log(data[0].hangerName);
-            document.getElementById("mname").value = data[0].hangerName;
-            document.getElementById("mconstruction").value= data[0].construction;
-            document.getElementById("mcolor").value = data[0].color;
-            document.getElementById("msturdiness").value = data[0].sturdiness;
-            document.getElementById("mpantclips").value = data[0].pantClips;
-           
-        });
-    });
-
-
-
-    // Code for modifying a single hanger
-    document.getElementById("msubmit").addEventListener("click", function () {
-        var tName = document.getElementById("mname").value;
-        var tConstruction = document.getElementById("mconstruction").value;
-        var tColor = document.getElementById("mcolor").value;
-        var tSturdiness = document.getElementById("msturdiness").value;
-        var tPantClips = document.getElementById("mpantclips").value;
-
-        if (tPantClips != true || tPantClips != 'True') {
-            tPantClips = false;
-        } else {
-            tPantClips = true;
-        }
-
-
-        var oneHanger = new storeTransaction(tName, tConstruction, tColor, tSturdiness, tPantClips);
-        
-            $.ajax({
-                url: 'UpdateHanger/'+idToFind,
-                type: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify(oneHanger),
-                    success: function (response) {  
-                        console.log(response);  
-                    },  
-                    error: function () {  
-                        console.log('Error in Update Operation');  
-                    }  
-                });   
-       
-    });
-
-    
-
     // create a new transaction for page load - modified by Ken Evans
     buildTransaction();
 
@@ -132,3 +95,20 @@ function buildTransaction() {
     document.getElementById("pricePaid").value = tPricePaid;
    
 }
+
+
+// Code for generating one transaction - modified by Khalid Mohamed
+function SubmitFiveHundredTransaction() {
+
+    
+    var tSalesPersonID = (Math.floor(Math.random() * 24) + 1);
+    var tStoreID = StoreIDList[Math.floor(((tSalesPersonID + 3) / 4) - 1)];
+    var tCdID = CdIDList[Math.floor(Math.random() * 10)];
+    var tPricePaid = (Math.floor(Math.random() * 11) + 5);
+
+    var fiveHundredTransactions = new storeTransaction(tSalesPersonID, tStoreID, tCdID, tPricePaid);
+
+    return fiveHundredTransactions;
+
+}
+
